@@ -1,0 +1,15 @@
+export const constSchema = {
+  id: 'id',
+  date: 'date',
+  plantCode: 'plantCode',
+  plantName: 'plantName',
+  basketCode: 'basketCode',
+  basketName: 'basketName',
+  totalQuanty: 'totalQuanty',
+  expectedToCome: 'expectedToCome',
+  uom: 'uom',
+  importQuantity: 'importQuantity',
+  exportQuantity: 'exportQuantity',
+  roadInventory: 'roadInventory',
+  waitInventory: 'waitInventory',
+};

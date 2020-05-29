@@ -1,0 +1,124 @@
+import * as constants from './constants';
+
+/**
+ * Fetch data => set to reducer => make default values
+ * => dispatch a submit form action with default values
+ * @param {object} formValues
+ * @returns {{type: string}}
+ */
+export function fetchFormData(formValues) {
+  return {
+    type: constants.FETCH_FORM_DATA,
+    formValues,
+  };
+}
+
+/**
+ * @param {object} formData
+ * @returns {{formData: *, type: string}}
+ */
+export function fetchFormDataSuccess(formData) {
+  return { type: constants.FETCH_FORM_DATA_SUCCESS, formData };
+}
+
+export function getFormDataSuccess(formData) {
+  return { type: constants.GET_FORM_DATA_SUCCESS, formData };
+}
+/**
+ * @param {object} formValues
+ * @returns {{formValues: *, type: string}}
+ */
+export function submitForm(formValues) {
+  return {
+    type: constants.SUBMIT_FORM,
+    formValues,
+  };
+}
+
+/**
+ * @param {object} submittedValues
+ * @param {array} tableData
+ * @returns {{tableData: *, type: string, submittedValues: *}}
+ */
+export function submitFormSuccess(submittedValues, tableData, totalQuantity) {
+  return {
+    type: constants.SUBMIT_FORM_SUCCESS,
+    submittedValues,
+    tableData,
+    totalQuantity,
+  };
+}
+
+export function exportExcel(formValues) {
+  return {
+    type: constants.EXPORT_EXCEL,
+    formValues,
+  };
+}
+
+export function onChangeOrder(formValues, sort) {
+  return {
+    type: constants.CHANGE_ORDER,
+    formValues,
+    sort,
+  };
+}
+
+/**
+ * Auto complete Mã sản phẩm
+ */
+export function getProductAuto(inputText, callback) {
+  return {
+    type: constants.GET_PRODUCT_AUTO,
+    inputText,
+    callback,
+  };
+}
+/**
+ * Auto complete Mã sản phẩm
+ */
+export function getOriginAuto(inputText, callback) {
+  return {
+    type: constants.GET_ORIGIN_AUTO,
+    inputText,
+    callback,
+  };
+}
+
+/**
+ * Auto complete Đơn vị Tính
+ */
+export function getUoMAuto(inputText, callback) {
+  return {
+    type: constants.GET_UOM_AUTO,
+    inputText,
+    callback,
+  };
+}
+
+export function submitAssess(data, callback) {
+  return {
+    type: constants.SUBMIT_ASSESS,
+    data,
+    callback,
+  };
+}
+
+export function updateLocator(locators) {
+  return { type: constants.UPDATE_LOCATOR, locators };
+}
+export function fetchLocators(formValues, plantCode) {
+  return { type: constants.FETCH_LOCATORS, formValues, plantCode };
+}
+
+export function getSizeFile() {
+  return {
+    type: constants.SIZE_FILE,
+  };
+}
+export function getSizeFileSuccess(sizeFile) {
+  return {
+    type: constants.SIZE_FILE_SUCCESS,
+    sizeFile,
+  };
+}

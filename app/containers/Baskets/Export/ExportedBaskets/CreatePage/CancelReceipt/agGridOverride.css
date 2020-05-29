@@ -1,0 +1,5 @@
+/* fix agGrid minHeight 50px */
+.ag-body-viewport.ag-layout-auto-height .ag-center-cols-clipper,
+.ag-body-viewport.ag-layout-auto-height .ag-center-cols-container {
+  min-height: 30px !important;
+}

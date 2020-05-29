@@ -1,0 +1,172 @@
+# do not use "latest" here, if you want this to work in the future
+image: docker:18-git
+
+stages:
+- prepare
+- build
+- deploy
+
+variables:
+  DOCKERFILE_PATH: ./docker
+  SRC_PATH: .
+  BASE_URL: fc40.3si.vn
+  #XIP_IO_URL: 192.168.1.95.xip.io
+
+# Use this if your GitLab runner does not use socket binding
+services:
+  - docker:dind
+
+before_script:
+  # docker login asks for the password to be passed through stdin for security
+  # we use $CI_JOB_TOKEN here which is a special token provided by GitLab
+  - echo -n $CI_JOB_TOKEN | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
+
+create_builder:
+  stage: prepare
+  variables:
+    CI_IMAGE_NAME: $CI_REGISTRY_IMAGE
+  script:
+    - docker build -f $DOCKERFILE_PATH/builder.Dockerfile -t $CI_IMAGE_NAME:builder-$CI_COMMIT_REF_SLUG $SRC_PATH
+    - docker push $CI_IMAGE_NAME:builder-$CI_COMMIT_REF_SLUG
+  only:
+    refs:
+      - develop
+      - develop-cr
+      - staging
+      - hotfixes
+      - new-feature
+    changes:
+      - package.json
+      - package-lock.json
+      - builder.Dockerfile
+      - internals/**/*
+
+build:
+  stage: build
+  cache:
+    key: ${CI_JOB_STAGE}
+    paths:
+    - /cache
+  variables:
+    CI_IMAGE_NAME: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+  script:
+    - docker pull $CI_IMAGE_NAME:builder-$CI_COMMIT_REF_SLUG || true
+    - docker build --cache-from $CI_IMAGE_NAME:builder-$CI_COMMIT_REF_SLUG --build-arg builder_image_name=$CI_REGISTRY_IMAGE:builder-$CI_COMMIT_REF_SLUG -f $DOCKERFILE_PATH/Dockerfile -t $CI_IMAGE_NAME $SRC_PATH
+    - docker push $CI_IMAGE_NAME
+  only:
+    - develop
+    - develop-cr
+    - staging
+    - hotfixes
+    - new-feature
+
+create_builder_prod:
+  stage: prepare
+  variables:
+    CI_IMAGE_NAME: $CI_REGISTRY_IMAGE
+  script:
+    - docker build -f $DOCKERFILE_PATH/builder.Dockerfile -t $CI_IMAGE_NAME:builder-$CI_COMMIT_REF_SLUG $SRC_PATH
+    - docker push $CI_IMAGE_NAME:builder-$CI_COMMIT_REF_SLUG
+  only:
+    - tags
+  except:
+    - branches
+      
+build_prod:
+  stage: build
+  cache:
+    key: ${CI_JOB_STAGE}
+    paths:
+    - /cache
+  variables:
+    CI_IMAGE_NAME: $CI_REGISTRY_IMAGE/master
+    CI_IMAGE_SHORT_NAME: $CI_REGISTRY_IMAGE
+  script:
+    - docker pull $CI_IMAGE_SHORT_NAME:builder-$CI_COMMIT_REF_SLUG || true
+    - docker build --cache-from $CI_IMAGE_SHORT_NAME:builder-$CI_COMMIT_REF_SLUG --build-arg builder_image_name=$CI_IMAGE_SHORT_NAME:builder-$CI_COMMIT_REF_SLUG -f $DOCKERFILE_PATH/Dockerfile -t $CI_IMAGE_NAME:$CI_COMMIT_TAG $SRC_PATH
+    - docker tag $CI_IMAGE_NAME:$CI_COMMIT_TAG $CI_IMAGE_NAME:latest
+    - docker tag $CI_IMAGE_NAME:$CI_COMMIT_TAG $CI_IMAGE_SHORT_NAME:$CI_COMMIT_TAG
+    - docker tag $CI_IMAGE_NAME:$CI_COMMIT_TAG $CI_IMAGE_SHORT_NAME:latest
+    - docker push $CI_IMAGE_NAME:$CI_COMMIT_TAG
+    - docker push $CI_IMAGE_NAME:latest
+    - docker push $CI_IMAGE_SHORT_NAME:$CI_COMMIT_TAG
+    - docker push $CI_IMAGE_SHORT_NAME:latest
+  only:
+    - tags
+  except:
+    - branches
+
+# deploy_dev:
+  # stage: deploy
+  # environment:
+    # name: dev
+    # url: https://$CI_BUILD_REF_SLUG.$BASE_URL
+  # image:
+    # name: lachlanevenson/k8s-kubectl:latest
+    # entrypoint: ["/bin/sh", "-c"]
+  # variables:
+    # CI_BUILD_REF_SLUG: $CI_PROJECT_NAME-$CI_ENVIRONMENT_SLUG
+    # CI_IMAGE_NAME: $CI_REGISTRY_IMAGE
+    # NODE_PORT: 30000
+    # NAMESPACE: fc40-dev
+    # API_GATEWAY_URL: https://fc40-api-gateway-dev.fc40.3si.vn/
+    # SIGNALR_URL: https://fc40-socket-dev.fc40.3si.vn/
+  # before_script: []
+  # script:
+    # - kubectl version
+    # - cd kubernetes/
+    # - sed -i "s|__BASE_URL__|${BASE_URL}|" ingress.yaml
+    # - sed -i "s|__SUB_DOMAIN__|${CI_BUILD_REF_SLUG}|" ingress.yaml
+    # - sed -i "s|__CI_BUILD_REF_SLUG__|${CI_BUILD_REF_SLUG}|" deploy.yaml ingress.yaml service.yaml
+    # - sed -i "s|__NAMESPACE__|${NAMESPACE}|" deploy.yaml ingress.yaml service.yaml
+    # - sed -i "s|__CI_IMAGE_NAME__|${CI_IMAGE_NAME}|" deploy.yaml
+    # - sed -i "s|__VERSION__|${CI_COMMIT_REF_SLUG}|" deploy.yaml
+    # - sed -i "s|__CI_COMMIT_SHORT_SHA__|${CI_COMMIT_SHORT_SHA}|" deploy.yaml
+    # - sed -i "s|__NODE_PORT__|${NODE_PORT}|" service.yaml
+    # - sed -i "s|__API_GATEWAY_URL__|${API_GATEWAY_URL}|" deploy.yaml
+    # - sed -i "s|__SIGNALR_URL__|${SIGNALR_URL}|" deploy.yaml
+    # - kubectl apply -f deploy.yaml
+    # - kubectl apply -f service.yaml
+    # - kubectl apply -f ingress.yaml
+    # - kubectl rollout status -f deploy.yaml
+    # - kubectl get all,ing -l app=${CI_BUILD_REF_SLUG}
+  # only:
+    # - develop
+
+deploy_test:
+  stage: deploy
+  environment:
+    name: dev
+    url: https://$CI_BUILD_REF_SLUG.$BASE_URL
+  image:
+    name: lachlanevenson/k8s-kubectl:latest
+    entrypoint: ["/bin/sh", "-c"]
+  variables:
+    CI_BUILD_REF_SLUG: $CI_PROJECT_NAME
+    CI_IMAGE_NAME: $CI_REGISTRY_IMAGE
+    NODE_PORT: 30100
+    NAMESPACE: fc40-test
+    API_GATEWAY_URL: https://fc40-api-gateway.fc40.3si.vn/
+    SIGNALR_URL: https://fc40-socket.fc40.3si.vn/
+  before_script: []
+  script:
+    - kubectl version
+    - cd kubernetes/
+    - sed -i "s|__BASE_URL__|${BASE_URL}|" ingress.yaml
+    - sed -i "s|__SUB_DOMAIN__|${CI_BUILD_REF_SLUG}|" ingress.yaml
+    - sed -i "s|__CI_BUILD_REF_SLUG__|${CI_BUILD_REF_SLUG}|" deploy.yaml ingress.yaml service.yaml
+    - sed -i "s|__NAMESPACE__|${NAMESPACE}|" deploy.yaml ingress.yaml service.yaml
+    - sed -i "s|__CI_IMAGE_NAME__|${CI_IMAGE_NAME}|" deploy.yaml
+    - sed -i "s|__VERSION__|${CI_COMMIT_REF_SLUG}|" deploy.yaml
+    - sed -i "s|__CI_COMMIT_SHORT_SHA__|${CI_COMMIT_SHORT_SHA}|" deploy.yaml
+    - sed -i "s|__NODE_PORT__|${NODE_PORT}|" service.yaml
+    - sed -i "s|__API_GATEWAY_URL__|${API_GATEWAY_URL}|" deploy.yaml
+    - sed -i "s|__SIGNALR_URL__|${SIGNALR_URL}|" deploy.yaml
+    - kubectl apply -f deploy.yaml
+    - kubectl apply -f service.yaml
+    - kubectl apply -f ingress.yaml
+    - kubectl rollout status -f deploy.yaml
+    - kubectl get all,ing -l app=${CI_BUILD_REF_SLUG}
+  only:
+    - develop-cr
+ # when: manual

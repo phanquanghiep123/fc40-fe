@@ -1,0 +1,17 @@
+/**
+ * Fix Grid Header Height,
+ * Import after the original style files
+ * Use together with agAutosizeHeaders function in agGridUtils.js
+ */
+.ag-theme-material .ag-header-cell {
+  line-height: 1rem;
+  padding: 0.5rem;
+}
+
+.ag-theme-material .ag-header-cell-label .ag-header-cell-text {
+  height: auto;
+  overflow: visible;
+  white-space: normal;
+  text-overflow: clip;
+  overflow-wrap: normal;
+}

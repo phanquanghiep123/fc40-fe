@@ -1,0 +1,93 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fc40-fe
+  namespace: fc40-hotfix
+  labels:
+    app: fc40-fe
+    track: stable
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fc40-fe
+  template:
+    metadata:
+      labels:
+        app: fc40-fe
+        checksum: "20190731"
+        track: stable
+    spec:
+      imagePullSecrets:
+        - name: 3s-registry
+      containers:
+      - name: app
+        image: registry.3si.vn/vineco/fc40-fe:hotfix-2-1-1
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        env:
+        - name: BASE_URL
+          value: https://hotfix-api-fc40.vineco.net.vn/
+        - name: SOCKET_URL
+          value: wss://localhost:7443/scale
+        - name: SIGNALR_URL
+          value: https://hotfix-socket-fc40.vineco.net.vn/
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 3
+          timeoutSeconds: 2
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 3
+          timeoutSeconds: 2
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: fc40-fe
+  namespace: fc40-hotfix
+  labels:
+    app: fc40-fe
+  annotations:
+    kubernetes.io/tls-acme: "true"
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  tls:
+  - hosts:
+    - hotfix-fc40.vineco.net.vn
+    secretName: letsencrypt-prod
+  rules:
+  - host: hotfix-fc40.vineco.net.vn
+    http:
+      paths:
+      - backend:
+          serviceName: fc40-fe
+          servicePort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fc40-fe
+  namespace: fc40-hotfix
+  labels:
+    app: fc40-fe
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "80"
+    prometheus.io/scheme: "http"
+    prometheus.io/path: "/metrics"
+spec:
+  type: NodePort
+  ports:
+    - name: fc40-fe
+      port: 80
+      targetPort: 80
+      nodePort: 30030
+      protocol: TCP
+  selector:
+    app: fc40-fe

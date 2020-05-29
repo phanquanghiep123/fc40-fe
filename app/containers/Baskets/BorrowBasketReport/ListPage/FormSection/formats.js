@@ -1,0 +1,16 @@
+export const formDataSchema = {
+  org: [],
+  orgList: [],
+  DateTo: '',
+  DateFrom: '',
+  date: '',
+  basketCode: [],
+  basket: [],
+  shortName: '',
+  Sort: '',
+  vendorType: [],
+  vendorTypeList: [],
+  status: [],
+  statusList: [],
+  vendor: '',
+};

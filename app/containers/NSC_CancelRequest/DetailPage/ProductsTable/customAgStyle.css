@@ -1,0 +1,8 @@
+.ag-theme-material .ag-cell .ag-react-container {
+  /*overflow: hidden;*/
+  text-overflow: ellipsis;
+}
+
+.ag-center-cols-viewport {
+  overflow-x: hidden;
+}

@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: __CI_BUILD_REF_SLUG__
+  namespace: __NAMESPACE__
+  labels:
+    app: __CI_BUILD_REF_SLUG__
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "80"
+    prometheus.io/scheme: "http"
+    prometheus.io/path: "/metrics"
+spec:
+  type: NodePort
+  ports:
+    - name: __CI_BUILD_REF_SLUG__
+      port: 80
+      targetPort: 80
+      nodePort: __NODE_PORT__ #30000
+      protocol: TCP
+  selector:
+    app: __CI_BUILD_REF_SLUG__

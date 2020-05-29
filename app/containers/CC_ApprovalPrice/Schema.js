@@ -1,0 +1,32 @@
+import * as Yup from 'yup';
+export const validSchema = Yup.object().shape({
+  deliveryOrderCode: Yup.string().required('Trường không được bỏ trống'),
+  user: Yup.string().required('Trường không được bỏ trống'),
+  receiverCode: Yup.string().required('Trường không được bỏ trống'),
+  deliverName: Yup.string().required('Trường không được bỏ trống'),
+});
+export const initialSchema = {
+  id: 3,
+  PlantCode: '',
+  DateFrom: Date.now(),
+  DateTo: Date.now(),
+  RegionProductionCode: '',
+  RegionConsumeCode: '',
+  ProductCode: '',
+  ProductName: '',
+  Supply: '',
+  PriceIdc: '',
+  PriceNsc: '',
+  PriceFarm: '',
+  PriceItself: '',
+  Season: '',
+  ProductType: '',
+  Uom: '',
+  Note: '',
+  SystemStatus: '',
+  IsDeleted: '',
+  CreatedBy: '',
+  CreatedAt: Date.now(),
+  UpdatedBy: '',
+  UpdatedAt: Date.now(),
+};

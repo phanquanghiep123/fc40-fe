@@ -1,0 +1,2 @@
+- Thư mục này dành cho trường hợp loại xuất kho là **xuất huỷ**.
+- Tổ chức code riêng, không dùng tiếp theo cách làm ở các màn khác

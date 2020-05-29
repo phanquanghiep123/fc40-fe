@@ -1,0 +1,9 @@
+#tableData > div > div > div.ag-paging-panel.ag-unselectable > span.ag-paging-page-summary-panel > button{
+  background-size: 24px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
+#tableData > div > div > div.ag-paging-panel.ag-unselectable > span.ag-paging-page-summary-panel > button:hover{
+   background-color: rgba(0, 0, 0, 0.2);
+}

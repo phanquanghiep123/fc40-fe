@@ -1,0 +1,8 @@
+export const FETCH_MASTER_DATA_REQUEST = 'app/ApprovedPrice/FETCH_MASTER_DATA';
+export const FETCH_MASTER_DATA_SUCCESS =
+  'app/ApprovedPrice/FETCH_MASTER_DATA_SUCCESS';
+export const UPLOAD_FILE_APPROVED_PRICE =
+  'app/ApprovedPrice/UPLOAD_FILE_APPROVED_PRICE';
+export const SUBMIT_FILE_SIGNALR = 'fc40/ApprovedPrice/SUBMIT_FILE_SIGNALR';
+export const SIGNALR_PROCESSING = 'app/ApprovedPrice/SIGNALR_PROCESSING';
+export const DOWNLOAD_SAMPLE_FILE = 'fc40/ApprovedPrice/DOWNLOAD_SAMPLE_FILE';

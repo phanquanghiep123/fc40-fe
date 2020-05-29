@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: __CI_BUILD_REF_SLUG__
+  namespace: __NAMESPACE__
+  labels:
+    app: __CI_BUILD_REF_SLUG__
+    track: stable
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: __CI_BUILD_REF_SLUG__
+  template:
+    metadata:
+      labels:
+        app: __CI_BUILD_REF_SLUG__
+        checksum: __CI_COMMIT_SHORT_SHA__
+        track: stable
+    spec:
+      imagePullSecrets:
+        - name: 3s-registry
+      containers:
+      - name: app
+        image: __CI_IMAGE_NAME__:__VERSION__
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        env:
+        - name: BASE_URL
+          value: __API_GATEWAY_URL__
+        - name: SOCKET_URL
+          value: wss://localhost:7443/scale
+        - name: SIGNALR_URL
+          value: __SIGNALR_URL__
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 3
+          timeoutSeconds: 2
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 3
+          timeoutSeconds: 2 

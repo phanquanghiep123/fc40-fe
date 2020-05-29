@@ -1,0 +1,14 @@
+.my-class {
+  border: 0px !important;
+  border-left: 1px solid #e2e2e2 !important;
+  border-color: transparent;
+}
+div.ag-header-cell.header-right > div.ag-cell-label-container > div > span.ag-header-cell-text{
+  float: none;
+}
+.header-right {
+  text-align: right;
+}
+div.ag-header-cell.header-right > div.ag-cell-label-container > div{
+  display: block;
+}

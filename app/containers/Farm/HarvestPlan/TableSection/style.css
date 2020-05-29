@@ -1,0 +1,33 @@
+.show-cell {
+  background: white;
+  border-left: 1px solid lightgrey !important;
+  outline: none !important;
+}
+.show-cell-row-span-right {
+  border-bottom: 1px solid lightgrey !important;
+  outline: none !important;
+}
+.show-cell-row-span-left {
+  background: white;
+  border-bottom: 1px solid lightgrey !important;
+  border-right: 1px solid lightgrey !important;
+  outline: none !important;
+}
+.show-name {
+  font-weight: bold;
+}
+.show-presenter {
+  font-style: italic;
+}
+
+.show-cell-stt {
+  background: white;
+  border-right: 1px solid lightgrey !important;
+  outline: none !important;
+}
+
+.show-cell-1-row {
+  background: white;
+  border-bottom: none !important;
+  outline: none !important;
+}

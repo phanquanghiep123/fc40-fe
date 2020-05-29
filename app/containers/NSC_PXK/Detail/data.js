@@ -1,0 +1,32 @@
+export const chiTietPhieu = {
+  documentCode: '4900000012',
+  subTypeName: 'Xuất sơ chế',
+  deliverName: 'NSC Sài Đồng',
+  receiverName: 'NSC Sài Đồng',
+  date: '2019-12-12T12:12:12',
+  exporterName: 'Nguyen Van A',
+  exporterPhone: '09456869485',
+  exporterEmail: 'mien@vingroup.com',
+  supervisorName: null,
+  note: null,
+  documentDetails: [
+    {
+      productCode: '51000599',
+      productName: 'TP-Cà chua cherry L1 GT VE',
+      slotCode: '2001190419',
+      locatorNameFrom: 'Sơ chế',
+      exportedQuantity: 110.34,
+      uom: 'KG',
+      statusName: 'Hoàn thành',
+    },
+    {
+      productCode: '51000599',
+      productName: 'TP-Cà chua cherry L1 VE',
+      slotCode: '2001190419',
+      locatorNameFrom: 'Sơ chế',
+      exportedQuantity: 110.34,
+      uom: 'KG',
+      statusName: 'Hoàn thành',
+    },
+  ],
+};

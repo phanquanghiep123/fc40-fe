@@ -1,0 +1,70 @@
+export const danhSachPhieu = [
+  {
+    productCode: '51000138',
+    productName: 'TP-Cà chua cherry đỏ DL NM/NK GT VE',
+    uom: 'KG',
+    deliveryQuantity: 80,
+    pickingQuantity: 75,
+    differentQuantity: -5,
+    differentRatioString: '-6.25%',
+    details: [
+      {
+        batch: '200119625',
+        farmProductionOrder: '100000669',
+        ratio: '80%',
+        differenceModify: 3,
+        locatorName: 'Kho sơ chế',
+      },
+      {
+        batch: '200119625',
+        farmProductionOrder: '100000670',
+        ratio: '20%',
+        differenceModify: 2,
+        locatorName: 'Kho sơ chế',
+      },
+    ],
+  },
+  {
+    productCode: '51000138',
+    productName: 'TP-Cà chua cherry đỏ DL NM/NK GT VE',
+    uom: 'KG',
+    deliveryQuantity: 100,
+    pickingQuantity: 80,
+    differentQuantity: -20,
+    differentRatioString: '-20%',
+    details: [
+      {
+        batch: '200119625',
+        farmProductionOrder: null,
+        ratio: null,
+        differenceModify: 20,
+        locatorName: 'Kho chia chọn',
+      },
+    ],
+  },
+  {
+    productCode: '51000138',
+    productName: 'TP-Cà chua cherry đỏ DL NM/NK GT VE',
+    uom: 'KG',
+    deliveryQuantity: 80,
+    pickingQuantity: 85,
+    differentQuantity: 5,
+    differentRatioString: '6.25%',
+    details: [
+      {
+        batch: '200119626',
+        farmProductionOrder: null,
+        ratio: null,
+        differenceModify: 3,
+        locatorName: 'Kho chờ hủy',
+      },
+      {
+        batch: '200119627',
+        farmProductionOrder: null,
+        ratio: null,
+        differenceModify: 2,
+        locatorName: 'Kho chờ hủy',
+      },
+    ],
+  },
+];

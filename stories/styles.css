@@ -1,0 +1,40 @@
+#story-root + div table,
+#root .info__overlay table {
+  width: 100%;
+  margin-top: 10px;
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+
+#story-root + div table td,
+#story-root + div table th,
+#root .info__overlay table td,
+#root .info__overlay table th {
+  border: 1px solid #dfe2e5;
+  padding: 8px 16px;
+}
+
+#story-root + div table tr:nth-child(2n),
+#root .info__overlay table tr:nth-child(2n) {
+  background-color: #f6f8fa;
+}
+
+#story-root + div table tr:hover,
+#root .info__overlay table tr:hover {
+  background-color: #f6f8fa;
+}
+
+#story-root + div table thead th,
+#root .info__overlay table thead th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  color: #ffffff;
+  text-align: left;
+  text-transform: capitalize;
+  background-color: #4caf50;
+}
+
+#story-root + div table tbody td span,
+#root .info__overlay table tbody td span {
+  white-space: pre-wrap;
+}
